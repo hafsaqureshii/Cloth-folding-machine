@@ -1,0 +1,24 @@
+int sensor = 7;                // pin 2 for PIR sensor
+int val = 0;                   // variable for reading the pin status
+ 
+void setup() 
+{
+  pinMode(sensor, INPUT);      // declare sensor as input
+ 
+  Serial.begin(9600);
+}
+ 
+void loop()
+{
+  val = digitalRead(sensor);   // read input value
+  if (val == HIGH) 
+  {            
+  Serial.println("motion detected");
+  delay(1000);
+  } 
+  else 
+  {
+    Serial.println("motion not detected");
+    delay(1000);
+  }
+}
