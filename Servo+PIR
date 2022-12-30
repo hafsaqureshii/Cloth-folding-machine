@@ -1,0 +1,59 @@
+#include <Servo.h>
+
+Servo myservo;  // create servo object to control a servo
+
+const int servoAnalogOut = A0;                                //The new Servo Pin
+unsigned int servoValueADeg, servoValueBDeg;  // Vaiables to store min and max values of servo's pot
+int pos = 0;                                                  // variable to store the servo position
+
+int sensor = 7;                // pin 2 for PIR sensor
+int val = 0;                   // variable for reading the pin status
+
+void setup() {
+  myservo.attach(9);  // attaches the servo on pin 9 to the servo object
+  Serial.begin(9600);
+  pinMode(sensor, INPUT);      // declare sensor as input
+  
+}
+
+void loop() {
+  //Serial.println(map(analogRead(servoAnalogOut), servoValueADeg, servoValueBDeg, 0, 120));
+  //delay(500);
+   val = digitalRead(sensor);   // read input value
+  if (val == HIGH) 
+  {            
+  Serial.println("motion detected");
+  delay(1000);
+  } 
+  else 
+  {
+    Serial.println("motion not detected");
+    delay(1000);
+    calibration();
+    delay(1000);
+  }
+}
+
+void calibration() {
+
+myservo.write(0);                                                    //set the servo to 0 position
+  delay(500);                                                          //wait for the servo to reach there
+  servoValueADeg = analogRead(servoAnalogOut);                         // Pot value at 0 degrees
+  //Serial.println("Pot value for 0 deg is " + String(servoValueADeg));  // Print it!
+ // delay(500);                                                          //fancy delay
+
+  myservo.write(120);                           //go to 120 degrees
+  delay(500);                                   //wait for the servo to reach there
+  servoValueBDeg = analogRead(servoAnalogOut);  //pot value at 120 deg
+ // Serial.println("Pot value for 120 deg is " + String(servoValueBDeg));
+ // delay(500);  //fancy delay
+
+myservo.write(0);                                                    //set the servo to 0 position
+  delay(500);                                                          //wait for the servo to reach there
+  servoValueADeg = analogRead(servoAnalogOut);                         // Pot value at 0 degrees
+  //Serial.println("Pot value for 0 deg is " + String(servoValueADeg));  // Print it!
+ // delay(500);                                    
+
+  myservo.detach();  // stop the PWM so that we can freely move the servo
+  delay(500);
+}
